@@ -1,4 +1,3 @@
-from app import app
 from .models import Source
 from .models import Articles
 import urllib.request, json   #to aid in reading api data
@@ -10,9 +9,9 @@ source_url = None
 articles_url = None
 
 
-api_key =app.config('NEWS_API_KEY') #how to get the api key
-NEWS_API_SOURCES_URL = 'https://newsapi.org/v2/sources?apiKey={}'
-NEWS_API_ARTICLES_URL = 'https://newsapi.org/v2/top-headlines?sources={}&apiKey={}'
+# api_key =app.config('NEWS_API_KEY') #how to get the api key
+# NEWS_API_SOURCES_URL = 'https://newsapi.org/v2/sources?apiKey={}'
+# NEWS_API_ARTICLES_URL = 'https://newsapi.org/v2/top-headlines?sources={}&apiKey={}'
 
 def configure_request(app):            #takes in the application instance and replaces the values of the None variables to application configuration objects
     global api_key, source_url, articles_url
@@ -21,11 +20,11 @@ def configure_request(app):            #takes in the application instance and re
     api_key = app.config['NEWS_API_KEY']
 
 
-def get_source(category):           #function that takes in the category argument
+def get_source():           #function that takes in the category argument
     '''
     Function that gets the json response to our url request
     '''
-    get_source_url = NEWS_API_SOURCES_URL.format(category,api_key)
+    get_source_url = source_url.format(api_key)
 
     with urllib.request.urlopen(get_source_url) as url:
         get_source_data = url.read()                      #read response and store it
@@ -33,8 +32,8 @@ def get_source(category):           #function that takes in the category argumen
 
         source_results = None
 
-        if get_source_response['results']:
-            source_results_list = get_source_response['results']
+        if get_source_response['sources']:
+            source_results_list = get_source_response['sources']
             source_results = process_results(source_results_list)
 
 
@@ -69,7 +68,7 @@ def get_articles(category):                #function that takes in the category 
     '''
     Function that gets the json response to our url request
     '''
-    get_articles_url = NEWS_API_ARTICLES_URL.format(category,api_key)
+    get_articles_url = articles_url.format(category,api_key)
 
     with urllib.request.urlopen(get_articles_url) as url:               #urllib sends request as url 
         get_articles_data = url.read()          #read response and store it

@@ -1,4 +1,3 @@
-from app import app
 from ..request import get_source , get_articles, search_articles
 from flask import render_template , request,redirect,url_for          #import render template since i'll need to render a template
 from .forms import ReviewForm
